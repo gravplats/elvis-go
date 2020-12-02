@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/mrydengren/elvis/pkg/config"
 	"github.com/mrydengren/elvis/pkg/playlist"
 	"log"
 	"os"
@@ -12,12 +13,14 @@ const (
 )
 
 func main() {
-	if os.Getenv(SPOTIFY_ID) == "" {
-		log.Fatalf("Missing env %s", SPOTIFY_ID)
+	cfg, err := config.Read(".elvis.json")
+	if err != nil {
+		log.Fatal(err)
 	}
-	if os.Getenv(SPOTIFY_SECRET) == "" {
-		log.Fatalf("Missing env %s", SPOTIFY_SECRET)
-	}
+
+	// The Spotify API wrapper reads these, if present.
+	os.Setenv(SPOTIFY_ID, cfg.Spotify.Id)
+	os.Setenv(SPOTIFY_SECRET, cfg.Spotify.Secret)
 
 	tracks := []playlist.Track{
 		playlist.Track{
