@@ -7,6 +7,10 @@ import (
 
 func TestReadValidConfigFile(t *testing.T) {
 	want := Config{
+		Lastfm: LastfmApiKeys{
+			Key:    "key value",
+			Secret: "secret value",
+		},
 		Spotify: SpotifyApiKeys{
 			Id:     "id value",
 			Secret: "secret value",
@@ -39,6 +43,8 @@ func TestReadEmptyJson(t *testing.T) {
 
 	e := Error{
 		Errors: []error{
+			ErrMissingLastfmKey,
+			ErrMissingLastfmSecret,
 			ErrMissingSpotifyId,
 			ErrMissingSpotifySecret,
 		},

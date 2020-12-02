@@ -1,4 +1,8 @@
 {
+  "lastfm": {
+    "key": "key value",
+    "secret": "secret value"
+  },
   "spotify": {
     "id": "id value",
     "secret": "secret value"

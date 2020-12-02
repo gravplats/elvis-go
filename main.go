@@ -1,8 +1,9 @@
 package main
 
 import (
+	"github.com/mrydengren/elvis/pkg/api/lastfm"
+	"github.com/mrydengren/elvis/pkg/cmd"
 	"github.com/mrydengren/elvis/pkg/config"
-	"github.com/mrydengren/elvis/pkg/playlist"
 	"log"
 	"os"
 )
@@ -18,30 +19,12 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// The lastfm API wrapper reads these, if present.
+	os.Setenv(lastfm.ApiKey, cfg.Lastfm.Key)
+	os.Setenv(lastfm.ApiSecret, cfg.Lastfm.Secret)
 	// The Spotify API wrapper reads these, if present.
 	os.Setenv(SPOTIFY_ID, cfg.Spotify.Id)
 	os.Setenv(SPOTIFY_SECRET, cfg.Spotify.Secret)
 
-	tracks := []playlist.Track{
-		playlist.Track{
-			Artist: "Opeth",
-			Name:   "Heir Apparent",
-		},
-		playlist.Track{
-			Artist: "Opeth",
-			Name:   "Deliverance",
-		},
-		playlist.Track{
-			Artist: "Opeth",
-			Name:   "Ghost of Perdition",
-		},
-	}
-
-	tracklist := playlist.Tracklist{
-		Artist: "Opeth",
-		Id:     "opeth",
-		Tracks: tracks,
-	}
-
-	playlist.Create(tracklist)
+	cmd.Top("Opeth", 10)
 }
