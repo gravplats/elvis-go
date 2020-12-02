@@ -3,6 +3,9 @@
     "key": "key value",
     "secret": "secret value"
   },
+  "setlistfm": {
+    "key": "key value"
+  },
   "spotify": {
     "id": "id value",
     "secret": "secret value"

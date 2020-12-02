@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/mrydengren/elvis/pkg/api/lastfm"
+	"github.com/mrydengren/elvis/pkg/api/setlistfm"
 	"github.com/mrydengren/elvis/pkg/cmd"
 	"github.com/mrydengren/elvis/pkg/config"
 	"log"
@@ -22,9 +23,11 @@ func main() {
 	// The lastfm API wrapper reads these, if present.
 	os.Setenv(lastfm.ApiKey, cfg.Lastfm.Key)
 	os.Setenv(lastfm.ApiSecret, cfg.Lastfm.Secret)
+	// The setlistfm API wrapper reads these, if present.
+	os.Setenv(setlistfm.ApiKey, cfg.Setlistfm.Key)
 	// The Spotify API wrapper reads these, if present.
 	os.Setenv(SPOTIFY_ID, cfg.Spotify.Id)
 	os.Setenv(SPOTIFY_SECRET, cfg.Spotify.Secret)
 
-	cmd.Top("Opeth", 10)
+	cmd.Setlist("53e3dba9")
 }

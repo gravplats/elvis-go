@@ -11,6 +11,9 @@ func TestReadValidConfigFile(t *testing.T) {
 			Key:    "key value",
 			Secret: "secret value",
 		},
+		Setlistfm: SetlistfmApiKeys{
+			Key: "key value",
+		},
 		Spotify: SpotifyApiKeys{
 			Id:     "id value",
 			Secret: "secret value",
@@ -45,6 +48,7 @@ func TestReadEmptyJson(t *testing.T) {
 		Errors: []error{
 			ErrMissingLastfmKey,
 			ErrMissingLastfmSecret,
+			ErrMissingSetlistfmKey,
 			ErrMissingSpotifyId,
 			ErrMissingSpotifySecret,
 		},

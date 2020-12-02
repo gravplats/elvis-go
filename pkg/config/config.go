@@ -14,14 +14,19 @@ type LastfmApiKeys struct {
 	Secret string `json:"secret"`
 }
 
+type SetlistfmApiKeys struct {
+	Key string `json:"key"`
+}
+
 type SpotifyApiKeys struct {
 	Id     string `json:"id"`
 	Secret string `json:"secret"`
 }
 
 type Config struct {
-	Lastfm  LastfmApiKeys  `json:"lastfm"`
-	Spotify SpotifyApiKeys `json:"spotify"`
+	Lastfm    LastfmApiKeys    `json:"lastfm"`
+	Setlistfm SetlistfmApiKeys `json:"setlistfm"`
+	Spotify   SpotifyApiKeys   `json:"spotify"`
 }
 
 type Error struct {
@@ -32,6 +37,7 @@ var (
 	ErrNotValidJson         = errors.New("not valid JSON")
 	ErrMissingLastfmKey     = errors.New("missing lastfm key")
 	ErrMissingLastfmSecret  = errors.New("missing lastfm secret")
+	ErrMissingSetlistfmKey  = errors.New("missing setlistfm key")
 	ErrMissingSpotifyId     = errors.New("missing spotify id")
 	ErrMissingSpotifySecret = errors.New("missing spotify secret")
 )
@@ -70,6 +76,9 @@ func Read(dir string) (Config, error) {
 	}
 	if cfg.Lastfm.Secret == "" {
 		errs = append(errs, ErrMissingLastfmSecret)
+	}
+	if cfg.Setlistfm.Key == "" {
+		errs = append(errs, ErrMissingSetlistfmKey)
 	}
 	if cfg.Spotify.Id == "" {
 		errs = append(errs, ErrMissingSpotifyId)
