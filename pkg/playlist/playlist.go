@@ -2,6 +2,7 @@ package playlist
 
 import (
 	"fmt"
+	"github.com/mrydengren/elvis/pkg/debug"
 	"github.com/mrydengren/elvis/pkg/playlist/oauth"
 	"github.com/mrydengren/elvis/pkg/spinner"
 	"github.com/pkg/browser"
@@ -33,12 +34,16 @@ func Create(tracklist Tracklist) {
 		log.Fatal(err)
 	}
 
+	debug.DumpJson(user, "spotify-user.json")
+
 	spinner.Succeed()
 
 	spinner.Start("Fetching Spotify tracks.")
 
 	searchResults := searchByTracks(&client, tracklist)
 	matches := match(tracklist, searchResults)
+
+	debug.DumpJson(searchResults, "spotify-search-results.json")
 
 	// TODO: how to handle Fail()?
 	spinner.Succeed()

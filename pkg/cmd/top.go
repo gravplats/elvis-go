@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/mrydengren/elvis/pkg/api/lastfm"
+	"github.com/mrydengren/elvis/pkg/debug"
 	"github.com/mrydengren/elvis/pkg/playlist"
 	"github.com/mrydengren/elvis/pkg/spinner"
 	"log"
@@ -21,6 +22,8 @@ func Top(artist string, limit int) {
 		spinner.Fail()
 		log.Fatal(err)
 	}
+
+	debug.DumpJson(toptracks, "lastfm-toptracks.json")
 
 	tracklist := playlist.FromTopTracks(toptracks)
 

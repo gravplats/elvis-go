@@ -6,21 +6,38 @@ import (
 	"github.com/mrydengren/elvis/pkg/api/lastfm"
 	"github.com/mrydengren/elvis/pkg/api/setlistfm"
 	"github.com/mrydengren/elvis/pkg/config"
+	"github.com/mrydengren/elvis/pkg/debug"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"log"
 	"os"
+	"strconv"
+	"time"
 )
+
+type RootOptions struct {
+	Debug bool
+}
 
 const (
 	SPOTIFY_ID     = "SPOTIFY_ID"
 	SPOTIFY_SECRET = "SPOTIFY_SECRET"
 )
 
+var rootOpts = RootOptions{
+	Debug: false,
+}
+
 var rootCmd = cobra.Command{
 	Use:   "elvis",
 	Short: "A Spotify playlist generator",
 	Long:  "Elvis is a CLI for generating Spotify playlists from various web APIs.",
+	PersistentPostRun: func(cmd *cobra.Command, args []string) {
+		debug.DumpInput()
+		if dir, ok := debug.GetDebugDir(); ok {
+			fmt.Printf("\nWrote debug information to %s.\n", dir)
+		}
+	},
 }
 
 func Execute() {
@@ -60,6 +77,17 @@ func initConfig() {
 	os.Setenv(SPOTIFY_SECRET, cfg.Spotify.Secret)
 }
 
+func initDebug() {
+	os.Setenv(debug.DEBUG, strconv.FormatBool(rootOpts.Debug))
+	os.Setenv(debug.DEBUG_SESSION_ID, strconv.FormatInt(time.Now().Unix(), 10))
+}
+
 func init() {
-	cobra.OnInitialize(initConfig)
+	cobra.OnInitialize(
+		initConfig,
+		initDebug,
+	)
+
+	rootCmd.PersistentFlags().BoolVar(&rootOpts.Debug, "debug", false, "Output debug information")
+	rootCmd.PersistentFlags().MarkHidden("debug")
 }

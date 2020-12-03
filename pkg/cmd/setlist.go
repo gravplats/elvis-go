@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/mrydengren/elvis/pkg/api/setlistfm"
 	"github.com/mrydengren/elvis/pkg/cmd/parse"
+	"github.com/mrydengren/elvis/pkg/debug"
 	"github.com/mrydengren/elvis/pkg/playlist"
 	"github.com/mrydengren/elvis/pkg/spinner"
 	"log"
@@ -24,6 +25,8 @@ func Setlist(value string) {
 		spinner.Fail()
 		log.Fatal(err)
 	}
+
+	debug.DumpJson(setlist, "setlistfm-setlist.json")
 
 	tracklist := playlist.FromSetlist(setlist)
 
