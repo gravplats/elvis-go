@@ -6,7 +6,13 @@ import (
 	"strings"
 )
 
+type TopOptions struct {
+	Limit int
+}
+
 func NewCmdTop() *cobra.Command {
+	opts := TopOptions{}
+
 	cmdTop := cobra.Command{
 		Use:     "top <artist>",
 		Short:   "Generate a playlist from the last.fm top tracks for an artist",
@@ -14,12 +20,11 @@ func NewCmdTop() *cobra.Command {
 		Args:    cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			artist := strings.Join(args, " ")
-			// TODO: limit should be a CLI flag
-			limit := 10
-
-			elvisCmd.Top(artist, limit)
+			elvisCmd.Top(artist, opts.Limit)
 		},
 	}
+
+	cmdTop.Flags().IntVar(&opts.Limit, "limit", 10, "Number of tracks")
 
 	return &cmdTop
 }
