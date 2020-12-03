@@ -2,10 +2,12 @@ package main
 
 import (
 	"fmt"
+	"github.com/mitchellh/go-homedir"
 	"github.com/mrydengren/elvis/pkg/api/lastfm"
 	"github.com/mrydengren/elvis/pkg/api/setlistfm"
 	"github.com/mrydengren/elvis/pkg/cmd"
 	"github.com/mrydengren/elvis/pkg/config"
+	"github.com/spf13/viper"
 	"log"
 	"os"
 	"strings"
@@ -33,10 +35,24 @@ Examples:
    elvis top opeth`
 
 func main() {
-	cfg, err := config.Read(".elvis.json")
+	home, err := homedir.Dir()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
+		os.Exit(1)
 	}
+
+	viper.SetConfigName(".elvis")
+	viper.SetConfigType("json")
+
+	viper.AddConfigPath(home)
+	viper.AddConfigPath(".")
+
+	if err := viper.ReadInConfig(); err != nil {
+		log.Fatal("Unable to read config file.")
+	}
+
+	var cfg config.Config
+	viper.Unmarshal(&cfg)
 
 	// The lastfm API wrapper reads these, if present.
 	os.Setenv(lastfm.ApiKey, cfg.Lastfm.Key)
