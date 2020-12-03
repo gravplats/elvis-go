@@ -9,7 +9,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 )
 
 func requestToken(addr string, auth *spotify.Authenticator) *oauth2.Token {
@@ -90,7 +89,7 @@ func GetToken(addr string, auth *spotify.Authenticator) *oauth2.Token {
 		log.Println(err)
 	}
 
-	err = ioutil.WriteFile(dir, buf, os.ModePerm)
+	err = ioutil.WriteFile(dir, buf, 0644)
 	if err != nil {
 		log.Println(err)
 	}
