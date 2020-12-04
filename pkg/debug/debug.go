@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"path"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
@@ -27,7 +27,7 @@ func DumpInput() {
 		return
 	}
 
-	f := path.Join(d, "input")
+	f := filepath.Join(d, "input")
 	err := ioutil.WriteFile(f, buf, 0644)
 	if err != nil {
 		log.Println(err)
@@ -50,7 +50,7 @@ func DumpJson(v interface{}, filename string) {
 		return
 	}
 
-	f := path.Join(d, filename)
+	f := filepath.Join(d, filename)
 	err = ioutil.WriteFile(f, buf, 0644)
 	if err != nil {
 		log.Println(err)
@@ -68,7 +68,7 @@ func GetDebugDir() (string, bool) {
 		return "", false
 	}
 
-	dir := path.Join("debug", sessionId)
+	dir := filepath.Join("debug", sessionId)
 	err := os.MkdirAll(dir, os.ModePerm)
 	if err != nil {
 		log.Println(err)
