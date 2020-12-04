@@ -2,5 +2,3 @@ debug*/
 dist*/
 
 .elvis*.json
-
-oauth-token*.json
