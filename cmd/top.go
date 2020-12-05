@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	elvisCmd "github.com/mrydengren/elvis/pkg/cmd"
+	"github.com/mrydengren/elvis/pkg/cmd/top"
 	"github.com/spf13/cobra"
 	"strings"
 )
@@ -20,7 +20,7 @@ func NewCmdTop() *cobra.Command {
 		Args:    cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			artist := strings.Join(args, " ")
-			elvisCmd.Top(artist, opts.Limit)
+			top.Top(artist, opts.Limit)
 		},
 	}
 

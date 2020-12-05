@@ -1,9 +1,8 @@
-package cmd
+package setlist
 
 import (
 	"fmt"
 	"github.com/mrydengren/elvis/pkg/api/setlistfm"
-	"github.com/mrydengren/elvis/pkg/cmd/parse"
 	"github.com/mrydengren/elvis/pkg/debug"
 	"github.com/mrydengren/elvis/pkg/playlist"
 	"github.com/mrydengren/elvis/pkg/spinner"
@@ -11,7 +10,7 @@ import (
 )
 
 func Setlist(value string) {
-	setlistId := parse.SetlistId(value)
+	setlistId := SetlistId(value)
 	if setlistId == "" {
 		log.Fatal("Missing or incorrect <value>")
 	}
@@ -28,7 +27,7 @@ func Setlist(value string) {
 
 	debug.DumpJson(setlist, "setlistfm-setlist.json")
 
-	tracklist := playlist.FromSetlist(setlist)
+	tracklist := FromSetlist(setlist)
 
 	spinner.Succeed()
 

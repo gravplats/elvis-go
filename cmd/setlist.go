@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	elvisCmd "github.com/mrydengren/elvis/pkg/cmd"
+	"github.com/mrydengren/elvis/pkg/cmd/setlist"
 	"github.com/spf13/cobra"
 )
 
@@ -14,7 +14,7 @@ func NewCmdSetlist() *cobra.Command {
 			"  elvis setlist 53e3dba9",
 		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			elvisCmd.Setlist(args[0])
+			setlist.Setlist(args[0])
 		},
 	}
 

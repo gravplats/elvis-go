@@ -1,8 +1,8 @@
-package parse
+package setlist
 
 import "testing"
 
-func TestParseSetlistId(t *testing.T) {
+func TestSetlistId(t *testing.T) {
 	type fixture struct {
 		name  string
 		input string

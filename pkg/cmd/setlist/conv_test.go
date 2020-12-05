@@ -1,8 +1,8 @@
-package playlist
+package setlist
 
 import (
-	"github.com/mrydengren/elvis/pkg/api/lastfm"
 	"github.com/mrydengren/elvis/pkg/api/setlistfm"
+	"github.com/mrydengren/elvis/pkg/playlist"
 	"reflect"
 	"testing"
 )
@@ -35,15 +35,15 @@ func TestFromSetlistWithMultipleSongs(t *testing.T) {
 		Sets:   sets,
 	}
 
-	want := Tracklist{
+	want := playlist.Tracklist{
 		Artist: "Opeth",
 		Id:     "123abc",
-		Tracks: []Track{
-			Track{
+		Tracks: []playlist.Track{
+			playlist.Track{
 				Artist: "Opeth",
 				Name:   "Heir Apparent",
 			},
-			Track{
+			playlist.Track{
 				Artist: "Opeth",
 				Name:   "Ghost of Perdition",
 			},
@@ -88,15 +88,15 @@ func TestFromSetlistWithCover(t *testing.T) {
 		Sets:   sets,
 	}
 
-	want := Tracklist{
+	want := playlist.Tracklist{
 		Artist: "Opeth",
 		Id:     "123abc",
-		Tracks: []Track{
-			Track{
+		Tracks: []playlist.Track{
+			playlist.Track{
 				Artist: "Opeth",
 				Name:   "Heir Apparent",
 			},
-			Track{
+			playlist.Track{
 				Artist: "Napalm Death",
 				Name:   "You Suffer",
 			},
@@ -142,15 +142,15 @@ func TestFromSetlistWithMultipleSets(t *testing.T) {
 		Sets:   sets,
 	}
 
-	want := Tracklist{
+	want := playlist.Tracklist{
 		Artist: "Opeth",
 		Id:     "123abc",
-		Tracks: []Track{
-			Track{
+		Tracks: []playlist.Track{
+			playlist.Track{
 				Artist: "Opeth",
 				Name:   "Heir Apparent",
 			},
-			Track{
+			playlist.Track{
 				Artist: "Opeth",
 				Name:   "Deliverance",
 			},
@@ -161,37 +161,5 @@ func TestFromSetlistWithMultipleSets(t *testing.T) {
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("got: %+v, want: %+v", got, want)
-	}
-}
-
-func TestFromTopTracks(t *testing.T) {
-	toptracks := lastfm.TopTracksWrapper{
-		Toptracks: lastfm.TopTracks{
-			Track: []lastfm.TopTrack{
-				lastfm.TopTrack{
-					Artist: lastfm.TopTrackArtist{
-						Name: "Opeth",
-					},
-					Name: "Heir Apparent",
-				},
-			},
-		},
-	}
-
-	got := FromTopTracks(&toptracks)
-
-	want := Tracklist{
-		Artist: "Opeth",
-		Id:     "opeth",
-		Tracks: []Track{
-			Track{
-				Artist: "Opeth",
-				Name:   "Heir Apparent",
-			},
-		},
-	}
-
-	if reflect.DeepEqual(got, want) {
-		t.Errorf("got: %s, want: %s", got, want)
 	}
 }
