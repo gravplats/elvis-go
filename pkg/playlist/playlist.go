@@ -38,10 +38,44 @@ func Create(searchItemGroup SearchItemGroup) {
 
 	spinner.Succeed()
 
+	var matches []SearchMatch
+	var trackIds []spotify.ID
+
 	spinner.Start("Fetching Spotify tracks.")
 
-	resources := search(&client, searchItemGroup)
-	matches := match(searchItemGroup, resources)
+	switch searchItemGroup.Type.FilterField {
+	case "album":
+		resources := search(&client, searchItemGroup)
+		matches = match(searchItemGroup, resources)
+
+		var albumIds []spotify.ID
+		for _, match := range matches {
+			if match.ID == "" {
+				continue
+			}
+
+			albumIds = append(albumIds, match.ID)
+		}
+
+		pages := getAlbumTracks(&client, albumIds)
+
+		for _, page := range pages {
+			for _, track := range page.Tracks {
+				trackIds = append(trackIds, track.ID)
+			}
+		}
+	case "track":
+		resources := search(&client, searchItemGroup)
+		matches = match(searchItemGroup, resources)
+
+		for _, match := range matches {
+			if match.ID == "" {
+				continue
+			}
+
+			trackIds = append(trackIds, match.ID)
+		}
+	}
 
 	// TODO: how to handle Fail()?
 	spinner.Succeed()
@@ -56,21 +90,14 @@ func Create(searchItemGroup SearchItemGroup) {
 
 	spinner.Succeed()
 
-	spinner.Start("Adding Spotify track to playlist.")
-
-	var IDs []spotify.ID
-	for _, track := range matches {
-		if track.ID == "" {
-			continue
+	spinner.Start("Adding Spotify tracks to playlist.")
+	// It is only possible to add 100 tracks at a time to a playlist.
+	for _, slice := range Split(trackIds, 100) {
+		_, err = client.AddTracksToPlaylist(playlist.ID, slice...)
+		if err != nil {
+			spinner.Fail()
+			log.Fatal(err)
 		}
-
-		IDs = append(IDs, track.ID)
-	}
-
-	_, err = client.AddTracksToPlaylist(playlist.ID, IDs...)
-	if err != nil {
-		spinner.Fail()
-		log.Fatal(err)
 	}
 
 	spinner.Succeed()

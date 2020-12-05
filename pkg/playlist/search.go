@@ -75,6 +75,8 @@ func search(client *spotify.Client, group SearchItemGroup) [][]Resource {
 
 	for _, result := range results {
 		switch group.Type.FilterField {
+		case "album":
+			resources = append(resources, FromAlbum(result.Value))
 		case "track":
 			resources = append(resources, FromTrack(result.Value))
 		}

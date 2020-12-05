@@ -11,6 +11,10 @@ type SearchType struct {
 }
 
 var (
+	SearchItemTypeAlbum = SearchType{
+		FilterField: "album",
+		Search:      spotify.SearchTypeAlbum,
+	}
 	SearchItemTypeTrack = SearchType{
 		FilterField: "track",
 		Search:      spotify.SearchTypeTrack,
