@@ -2,25 +2,27 @@ package playlist
 
 import (
 	"fmt"
+	"github.com/mrydengren/elvis/pkg/debug"
 	"github.com/zmb3/spotify"
 	"log"
 	"sort"
 	"strings"
 )
 
-func searchByTracks(client *spotify.Client, list Tracklist) []*spotify.SearchResult {
-	type result struct {
+func search(client *spotify.Client, group SearchItemGroup) [][]Resource {
+	type Result struct {
 		Index int
 		Value *spotify.SearchResult
 	}
 
-	ch := make(chan result)
+	ch := make(chan Result)
 
-	for i, v := range list.Tracks {
-		go func(index int, track Track) {
-			query := fmt.Sprintf("artist:%s track:%s",
-				strings.ToLower(track.Artist),
-				strings.ToLower(track.Name),
+	for i, v := range group.Items {
+		go func(index int, item SearchItem) {
+			query := fmt.Sprintf("artist:%s %s:%s",
+				strings.ToLower(item.Artist),
+				group.Type.FilterField,
+				strings.ToLower(item.Name),
 			)
 
 			// TODO: these values should probably be configurable.
@@ -32,11 +34,11 @@ func searchByTracks(client *spotify.Client, list Tracklist) []*spotify.SearchRes
 				Limit:   &limit,
 			}
 
-			value, err := client.SearchOpt(query, spotify.SearchTypeTrack, &options)
+			value, err := client.SearchOpt(query, group.Type.Search, &options)
 			if err != nil {
 				log.Println(err)
 
-				ch <- result{
+				ch <- Result{
 					Index: index,
 					Value: nil,
 				}
@@ -44,16 +46,14 @@ func searchByTracks(client *spotify.Client, list Tracklist) []*spotify.SearchRes
 				return
 			}
 
-			// TODO: debug JSON if debug flag is set.
-
-			ch <- result{
+			ch <- Result{
 				Index: index,
 				Value: value,
 			}
 		}(i, v)
 	}
 
-	var results []result
+	var results []Result
 
 	// TODO: improve error handling, avoid sending too many concurrent requests, timeouts etc.
 
@@ -61,7 +61,7 @@ func searchByTracks(client *spotify.Client, list Tracklist) []*spotify.SearchRes
 		result := <-ch
 		results = append(results, result)
 
-		if len(results) == len(list.Tracks) {
+		if len(results) == len(group.Items) {
 			break
 		}
 	}
@@ -70,10 +70,19 @@ func searchByTracks(client *spotify.Client, list Tracklist) []*spotify.SearchRes
 		return results[i].Index < results[j].Index
 	})
 
+	var resources = make([][]Resource, 0, len(results))
 	var searchResults []*spotify.SearchResult
+
 	for _, result := range results {
+		switch group.Type.FilterField {
+		case "track":
+			resources = append(resources, FromTrack(result.Value))
+		}
+
 		searchResults = append(searchResults, result.Value)
 	}
 
-	return searchResults
+	debug.DumpJson(searchResults, "spotify-search-results.json")
+
+	return resources
 }

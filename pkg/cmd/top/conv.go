@@ -3,24 +3,23 @@ package top
 import (
 	"github.com/mrydengren/elvis/pkg/api/lastfm"
 	"github.com/mrydengren/elvis/pkg/playlist"
-	"strings"
 )
 
-func FromTopTracks(toptracks *lastfm.TopTracksWrapper) playlist.Tracklist {
-	var tracks []playlist.Track
+func FromTopTracks(toptracks *lastfm.TopTracksWrapper) playlist.SearchItemGroup {
+	var items []playlist.SearchItem
 
 	for _, tt := range toptracks.Toptracks.Track {
-		track := playlist.Track{
+		item := playlist.SearchItem{
 			Artist: tt.Artist.Name,
 			Name:   tt.Name,
 		}
 
-		tracks = append(tracks, track)
+		items = append(items, item)
 	}
 
-	return playlist.Tracklist{
+	return playlist.SearchItemGroup{
 		Artist: toptracks.Toptracks.Attr.Artist,
-		Id:     strings.ToLower(toptracks.Toptracks.Attr.Artist),
-		Tracks: tracks,
+		Items:  items,
+		Type:   playlist.SearchItemTypeTrack,
 	}
 }

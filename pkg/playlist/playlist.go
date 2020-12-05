@@ -10,7 +10,7 @@ import (
 	"log"
 )
 
-func Create(tracklist Tracklist) {
+func Create(searchItemGroup SearchItemGroup) {
 	spinner.Start("Fetching API access token from Spotify Accounts service.")
 
 	// White-listed addresses to redirect to after authentication success OR failure
@@ -40,17 +40,15 @@ func Create(tracklist Tracklist) {
 
 	spinner.Start("Fetching Spotify tracks.")
 
-	searchResults := searchByTracks(&client, tracklist)
-	matches := match(tracklist, searchResults)
-
-	debug.DumpJson(searchResults, "spotify-search-results.json")
+	resources := search(&client, searchItemGroup)
+	matches := match(searchItemGroup, resources)
 
 	// TODO: how to handle Fail()?
 	spinner.Succeed()
 
-	spinner.Start(fmt.Sprintf("Creating Spotify playlist for %s.", tracklist.Artist))
+	spinner.Start(fmt.Sprintf("Creating Spotify playlist for %s.", searchItemGroup.Artist))
 
-	playlist, err := client.CreatePlaylistForUser(user.ID, tracklist.Artist, "", false)
+	playlist, err := client.CreatePlaylistForUser(user.ID, searchItemGroup.Artist, "", false)
 	if err != nil {
 		spinner.Fail()
 		log.Fatal(err)

@@ -25,9 +25,9 @@ func Top(artist string, limit int) {
 
 	debug.DumpJson(toptracks, "lastfm-toptracks.json")
 
-	tracklist := FromTopTracks(toptracks)
+	searchItemGroup := FromTopTracks(toptracks)
 
 	spinner.Succeed()
 
-	playlist.Create(tracklist)
+	playlist.Create(searchItemGroup)
 }

@@ -23,18 +23,18 @@ func TestFromTopTracks(t *testing.T) {
 
 	got := FromTopTracks(&toptracks)
 
-	want := playlist.Tracklist{
+	want := playlist.SearchItemGroup{
 		Artist: "Opeth",
-		Id:     "opeth",
-		Tracks: []playlist.Track{
-			playlist.Track{
+		Items: []playlist.SearchItem{
+			playlist.SearchItem{
 				Artist: "Opeth",
 				Name:   "Heir Apparent",
 			},
 		},
+		Type: playlist.SearchItemTypeTrack,
 	}
 
 	if reflect.DeepEqual(got, want) {
-		t.Errorf("got: %s, want: %s", got, want)
+		t.Errorf("got: %+v, want: %+v", got, want)
 	}
 }

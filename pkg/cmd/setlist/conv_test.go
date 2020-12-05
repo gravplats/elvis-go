@@ -31,23 +31,22 @@ func TestFromSetlistWithMultipleSongs(t *testing.T) {
 
 	setlist := setlistfm.Setlist{
 		Artist: artist,
-		Id:     "123abc",
 		Sets:   sets,
 	}
 
-	want := playlist.Tracklist{
+	want := playlist.SearchItemGroup{
 		Artist: "Opeth",
-		Id:     "123abc",
-		Tracks: []playlist.Track{
-			playlist.Track{
+		Items: []playlist.SearchItem{
+			playlist.SearchItem{
 				Artist: "Opeth",
 				Name:   "Heir Apparent",
 			},
-			playlist.Track{
+			playlist.SearchItem{
 				Artist: "Opeth",
 				Name:   "Ghost of Perdition",
 			},
 		},
+		Type: playlist.SearchItemTypeTrack,
 	}
 
 	got := FromSetlist(&setlist)
@@ -84,23 +83,22 @@ func TestFromSetlistWithCover(t *testing.T) {
 
 	setlist := setlistfm.Setlist{
 		Artist: artist,
-		Id:     "123abc",
 		Sets:   sets,
 	}
 
-	want := playlist.Tracklist{
+	want := playlist.SearchItemGroup{
 		Artist: "Opeth",
-		Id:     "123abc",
-		Tracks: []playlist.Track{
-			playlist.Track{
+		Items: []playlist.SearchItem{
+			playlist.SearchItem{
 				Artist: "Opeth",
 				Name:   "Heir Apparent",
 			},
-			playlist.Track{
+			playlist.SearchItem{
 				Artist: "Napalm Death",
 				Name:   "You Suffer",
 			},
 		},
+		Type: playlist.SearchItemTypeTrack,
 	}
 
 	got := FromSetlist(&setlist)
@@ -138,23 +136,22 @@ func TestFromSetlistWithMultipleSets(t *testing.T) {
 
 	setlist := setlistfm.Setlist{
 		Artist: artist,
-		Id:     "123abc",
 		Sets:   sets,
 	}
 
-	want := playlist.Tracklist{
+	want := playlist.SearchItemGroup{
 		Artist: "Opeth",
-		Id:     "123abc",
-		Tracks: []playlist.Track{
-			playlist.Track{
+		Items: []playlist.SearchItem{
+			playlist.SearchItem{
 				Artist: "Opeth",
 				Name:   "Heir Apparent",
 			},
-			playlist.Track{
+			playlist.SearchItem{
 				Artist: "Opeth",
 				Name:   "Deliverance",
 			},
 		},
+		Type: playlist.SearchItemTypeTrack,
 	}
 
 	got := FromSetlist(&setlist)

@@ -27,9 +27,9 @@ func Setlist(value string) {
 
 	debug.DumpJson(setlist, "setlistfm-setlist.json")
 
-	tracklist := FromSetlist(setlist)
+	searchItemGroup := FromSetlist(setlist)
 
 	spinner.Succeed()
 
-	playlist.Create(tracklist)
+	playlist.Create(searchItemGroup)
 }
