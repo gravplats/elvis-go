@@ -75,6 +75,8 @@ func initConfig() {
 	// The Spotify API wrapper reads these, if present.
 	os.Setenv(SPOTIFY_ID, cfg.Spotify.Id)
 	os.Setenv(SPOTIFY_SECRET, cfg.Spotify.Secret)
+	// YouTube API keys
+	os.Setenv("YOUTUBE_KEY", cfg.YouTube.Key)
 }
 
 func initDebug() {

@@ -87,3 +87,15 @@ func IsDebug() bool {
 
 	return debug
 }
+
+func ReadJson(filename string, v interface{}) {
+	buf, err := ioutil.ReadFile(filename)
+	if err != nil {
+		log.Println(err)
+	}
+
+	err = json.Unmarshal(buf, &v)
+	if err != nil {
+		log.Println(err)
+	}
+}

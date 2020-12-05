@@ -14,8 +14,13 @@ type SpotifyApiKeys struct {
 	Secret string `json:"secret"`
 }
 
+type YouTubeApiKeys struct {
+	Key string `json:"key""`
+}
+
 type Config struct {
 	Lastfm    LastfmApiKeys    `json:"lastfm"`
 	Setlistfm SetlistfmApiKeys `json:"setlistfm"`
 	Spotify   SpotifyApiKeys   `json:"spotify"`
+	YouTube   YouTubeApiKeys   `json:"youtube"`
 }
