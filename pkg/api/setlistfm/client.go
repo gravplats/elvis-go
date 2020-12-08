@@ -2,7 +2,7 @@ package setlistfm
 
 import (
 	"encoding/json"
-	"log"
+	"fmt"
 	"net/http"
 	"os"
 	"time"
@@ -62,8 +62,7 @@ func (c *Client) get(url string, result interface{}) error {
 
 	if resp.StatusCode != http.StatusOK {
 		// TODO: decode error in response.
-		log.Fatal("HTTP NOT OK")
-		return nil
+		return fmt.Errorf("HTTP NOT OK")
 	}
 
 	err = json.NewDecoder(resp.Body).Decode(result)

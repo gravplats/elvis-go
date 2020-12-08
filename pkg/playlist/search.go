@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/mrydengren/elvis/pkg/debug"
 	"github.com/zmb3/spotify"
-	"log"
 	"sort"
 	"strings"
 )
@@ -36,8 +35,6 @@ func search(client *spotify.Client, group SearchItemGroup) [][]Resource {
 
 			value, err := client.SearchOpt(query, group.Type.Search, &options)
 			if err != nil {
-				log.Println(err)
-
 				ch <- Result{
 					Index: index,
 					Value: nil,

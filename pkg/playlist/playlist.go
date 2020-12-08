@@ -7,10 +7,9 @@ import (
 	"github.com/mrydengren/elvis/pkg/spinner"
 	"github.com/pkg/browser"
 	"github.com/zmb3/spotify"
-	"log"
 )
 
-func Create(searchItemGroup SearchItemGroup) {
+func Create(searchItemGroup SearchItemGroup) error {
 	spinner.Start("Fetching API access token from Spotify Accounts service.")
 
 	// White-listed addresses to redirect to after authentication success OR failure
@@ -31,7 +30,7 @@ func Create(searchItemGroup SearchItemGroup) {
 	user, err := client.CurrentUser()
 	if err != nil {
 		spinner.Fail()
-		log.Fatal(err)
+		return err
 	}
 
 	debug.DumpJson(user, "spotify-user.json")
@@ -85,7 +84,7 @@ func Create(searchItemGroup SearchItemGroup) {
 	playlist, err := client.CreatePlaylistForUser(user.ID, searchItemGroup.Artist, "", false)
 	if err != nil {
 		spinner.Fail()
-		log.Fatal(err)
+		return err
 	}
 
 	spinner.Succeed()
@@ -96,7 +95,7 @@ func Create(searchItemGroup SearchItemGroup) {
 		_, err = client.AddTracksToPlaylist(playlist.ID, slice...)
 		if err != nil {
 			spinner.Fail()
-			log.Fatal(err)
+			return err
 		}
 	}
 
@@ -112,4 +111,6 @@ func Create(searchItemGroup SearchItemGroup) {
 	}
 
 	browser.OpenURL(string(playlist.URI))
+
+	return nil
 }

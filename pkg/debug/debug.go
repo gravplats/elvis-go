@@ -16,7 +16,7 @@ const (
 )
 
 func DumpInput() {
-	if !IsDebug() {
+	if !isDebug() {
 		return
 	}
 
@@ -35,7 +35,7 @@ func DumpInput() {
 }
 
 func DumpJson(v interface{}, filename string) {
-	if !IsDebug() {
+	if !isDebug() {
 		return
 	}
 
@@ -58,7 +58,7 @@ func DumpJson(v interface{}, filename string) {
 }
 
 func GetDebugDir() (string, bool) {
-	if !IsDebug() {
+	if !isDebug() {
 		return "", false
 	}
 
@@ -78,7 +78,7 @@ func GetDebugDir() (string, bool) {
 	return dir, true
 }
 
-func IsDebug() bool {
+func isDebug() bool {
 	debug, err := strconv.ParseBool(os.Getenv(DEBUG))
 	if err != nil {
 		log.Println(err)
@@ -86,6 +86,12 @@ func IsDebug() bool {
 	}
 
 	return debug
+}
+
+func Println(v ...interface{}) {
+	if isDebug() {
+		log.Println(v...)
+	}
 }
 
 func ReadJson(filename string, v interface{}) {

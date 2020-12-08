@@ -3,6 +3,8 @@ package cmd
 import (
 	"github.com/mrydengren/elvis/pkg/cmd/setlist"
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
+	"log"
 )
 
 func NewCmdSetlist() *cobra.Command {
@@ -12,9 +14,17 @@ func NewCmdSetlist() *cobra.Command {
 		Example: "" +
 			"  elvis setlist https://www.setlist.fm/setlist/opeth/2017/finlandia-talo-helsinki-finland-53e3dba9.html\n" +
 			"  elvis setlist 53e3dba9",
-		Args: cobra.ExactArgs(1),
-		Run: func(cmd *cobra.Command, args []string) {
-			setlist.Setlist(args[0])
+		Args: func(cmd *cobra.Command, args []string) error {
+			if len(args) < 1 {
+				return pflag.ErrHelp
+			}
+			return nil
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if len(args) > 1 {
+				log.Printf("Ignoring extra arguments: %+v\n", args[1:])
+			}
+			return setlist.Setlist(args[0])
 		},
 	}
 

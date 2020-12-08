@@ -5,14 +5,12 @@ import (
 	"github.com/mrydengren/elvis/pkg/debug"
 	"github.com/mrydengren/elvis/pkg/playlist"
 	"github.com/mrydengren/elvis/pkg/spinner"
-	"log"
 )
 
-func Top(artist string, limit int) {
+func Top(artist string, limit int) error {
 	spinner.Start("Fetching top tracks.")
 
 	client := lastfm.NewClient()
-
 	options := &lastfm.TopTracksOptions{
 		Limit: &limit,
 	}
@@ -20,7 +18,7 @@ func Top(artist string, limit int) {
 	toptracks, err := client.ArtistTopTracks(artist, options)
 	if err != nil {
 		spinner.Fail()
-		log.Fatal(err)
+		return err
 	}
 
 	debug.DumpJson(toptracks, "lastfm-toptracks.json")
@@ -29,5 +27,5 @@ func Top(artist string, limit int) {
 
 	spinner.Succeed()
 
-	playlist.Create(searchItemGroup)
+	return playlist.Create(searchItemGroup)
 }

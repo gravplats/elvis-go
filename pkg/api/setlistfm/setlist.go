@@ -1,7 +1,5 @@
 package setlistfm
 
-import "log"
-
 type SetlistArtist struct {
 	Disambiguation string `json:"disambiguation"`
 	Mbid           string `json:"mbid"`
@@ -72,7 +70,6 @@ func (c *Client) Setlist(setlistId string) (*Setlist, error) {
 	var setlist Setlist
 	err := c.get(u, &setlist)
 	if err != nil {
-		log.Println(err)
 		return nil, err
 	}
 

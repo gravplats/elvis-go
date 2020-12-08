@@ -20,9 +20,7 @@ func GetToken(addr string, auth *spotify.Authenticator) *oauth2.Token {
 
 	filename, err := getTokenCacheFilename()
 	if err != nil {
-		if debug.IsDebug() {
-			log.Println(err)
-		}
+		debug.Println(err)
 	}
 
 	// If we have already have a token then let's use that one. This avoids the step of creating a HTTP server for the
@@ -33,18 +31,14 @@ func GetToken(addr string, auth *spotify.Authenticator) *oauth2.Token {
 			return token
 		}
 
-		if debug.IsDebug() {
-			log.Println(err)
-		}
+		debug.Println(err)
 	}
 
 	token = getTokenFromWeb(addr, auth)
 	if filename != "" {
 		err = saveTokenToFile(filename, token)
 		if err != nil {
-			if debug.IsDebug() {
-				log.Println(err)
-			}
+			debug.Println(err)
 		}
 	}
 
@@ -95,6 +89,7 @@ func getTokenFromWeb(addr string, auth *spotify.Authenticator) *oauth2.Token {
 		h.HandleFunc("/callback", func(w http.ResponseWriter, r *http.Request) {
 			token, err := auth.Token(state, r)
 			if err != nil {
+				// TODO: should pass error back.
 				log.Fatal(err)
 			}
 
@@ -108,6 +103,7 @@ func getTokenFromWeb(addr string, auth *spotify.Authenticator) *oauth2.Token {
 
 		err := s.ListenAndServe()
 		if err != nil {
+			// TODO: should pass error back.
 			log.Fatal(err)
 		}
 

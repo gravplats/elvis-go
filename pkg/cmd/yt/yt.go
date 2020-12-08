@@ -8,14 +8,13 @@ import (
 	"github.com/mrydengren/elvis/pkg/spinner"
 	"google.golang.org/api/option"
 	"google.golang.org/api/youtube/v3"
-	"log"
 	"os"
 )
 
-func Yt(value string) {
-	youtubeId := YouTubeId(value)
-	if youtubeId == "" {
-		log.Fatal("Missing or incorrect <value>")
+func Yt(value string) error {
+	youtubeId, err := parseYouTubeID(value)
+	if err != nil {
+		return err
 	}
 
 	spinner.Start(fmt.Sprintf("Fetching YouTube data for ID %s", youtubeId))
@@ -23,18 +22,18 @@ func Yt(value string) {
 	ctx := context.Background()
 	service, err := youtube.NewService(ctx, option.WithAPIKey(os.Getenv("YOUTUBE_KEY")))
 	if err != nil {
-		log.Fatalln(err)
+		return err
 	}
 
 	resp, err := service.Videos.List([]string{"snippet"}).Id(value).Do()
 	if err != nil {
 		spinner.Fail()
-		log.Fatal(err)
+		return err
 	}
 
 	if len(resp.Items) == 0 {
 		spinner.Fail()
-		log.Fatal("Found no matches")
+		return fmt.Errorf("Found no matches")
 	}
 
 	item := resp.Items[0]
@@ -44,5 +43,5 @@ func Yt(value string) {
 
 	spinner.Succeed()
 
-	playlist.Create(searchItemGroup)
+	return playlist.Create(searchItemGroup)
 }

@@ -3,7 +3,6 @@ package playlist
 import (
 	"github.com/mrydengren/elvis/pkg/debug"
 	"github.com/zmb3/spotify"
-	"log"
 	"sort"
 )
 
@@ -19,8 +18,6 @@ func getAlbumTracks(client *spotify.Client, ids []spotify.ID) []*spotify.SimpleT
 		go func(index int, id spotify.ID) {
 			value, err := client.GetAlbumTracks(id)
 			if err != nil {
-				log.Println(err)
-
 				ch <- Result{
 					Index: index,
 					Value: nil,

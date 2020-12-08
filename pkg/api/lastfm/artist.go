@@ -1,7 +1,6 @@
 package lastfm
 
 import (
-	"log"
 	"net/url"
 	"strconv"
 )
@@ -80,7 +79,6 @@ func (c *Client) ArtistTopTracks(artist string, opt *TopTracksOptions) (*TopTrac
 
 	err := c.get(MethodArtistTopTracks, values, &toptracks)
 	if err != nil {
-		log.Println(err)
 		return nil, err
 	}
 

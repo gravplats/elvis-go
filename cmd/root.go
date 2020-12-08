@@ -32,6 +32,10 @@ var rootCmd = cobra.Command{
 	Use:   "elvis",
 	Short: "A Spotify playlist generator",
 	Long:  "Elvis is a CLI for generating Spotify playlists from various web APIs.",
+	// Only print error once if there is an error in a sub-command.
+	SilenceErrors: true,
+	// Don't show usage if there is an error in a sub-command. Each sub-command will show usage if args are incorrect.
+	SilenceUsage: true,
 	PersistentPostRun: func(cmd *cobra.Command, args []string) {
 		debug.DumpInput()
 		if dir, ok := debug.GetDebugDir(); ok {

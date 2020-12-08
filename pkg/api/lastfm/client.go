@@ -2,7 +2,7 @@ package lastfm
 
 import (
 	"encoding/json"
-	"log"
+	"fmt"
 	"net/http"
 	"net/url"
 	"os"
@@ -73,8 +73,7 @@ func (c *Client) get(method string, values url.Values, result interface{}) error
 
 	if resp.StatusCode != http.StatusOK {
 		// TODO: decode error in response.
-		log.Fatal("HTTP NOT OK")
-		return nil
+		return fmt.Errorf("HTTP NOT OK")
 	}
 
 	err = json.NewDecoder(resp.Body).Decode(result)
