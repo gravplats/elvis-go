@@ -21,17 +21,17 @@ func TestFromTopTracks(t *testing.T) {
 		},
 	}
 
-	got := FromTopTracks(&toptracks)
+	got := fromTopTracks(&toptracks)
 
-	want := playlist.SearchItemGroup{
-		Artist: "Opeth",
-		Items: []playlist.SearchItem{
-			playlist.SearchItem{
+	want := playlist.ItemGroup{
+		Name: "Opeth",
+		Items: []playlist.Item{
+			playlist.Item{
 				Artist: "Opeth",
 				Name:   "Heir Apparent",
 			},
 		},
-		Type: playlist.SearchItemTypeTrack,
+		Type: playlist.ItemGroupTypeTrack,
 	}
 
 	if reflect.DeepEqual(got, want) {

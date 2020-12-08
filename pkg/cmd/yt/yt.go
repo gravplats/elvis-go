@@ -39,9 +39,9 @@ func Yt(value string) error {
 	item := resp.Items[0]
 	debug.DumpJson(item, "youtube-video.json")
 
-	searchItemGroup := FromDescription(item.Snippet.Title, item.Snippet.Description)
+	itemGroup := fromDescription(item.Snippet.Title, item.Snippet.Description)
 
 	spinner.Succeed()
 
-	return playlist.Create(searchItemGroup)
+	return playlist.Create(itemGroup)
 }

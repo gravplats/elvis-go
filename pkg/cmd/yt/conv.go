@@ -6,8 +6,8 @@ import (
 	"strings"
 )
 
-func FromDescription(title, description string) playlist.SearchItemGroup {
-	var items []playlist.SearchItem
+func fromDescription(title, description string) playlist.ItemGroup {
+	var items []playlist.Item
 
 	lines := strings.Split(description, "\n")
 
@@ -27,12 +27,12 @@ func FromDescription(title, description string) playlist.SearchItemGroup {
 			switch len(memento) {
 			case 1:
 				tokens := strings.Split(memento[0], "- ")
-				items = append(items, playlist.SearchItem{
+				items = append(items, playlist.Item{
 					Artist: tokens[0],
 					Name:   tokens[1],
 				})
 			case 2:
-				items = append(items, playlist.SearchItem{
+				items = append(items, playlist.Item{
 					Artist: memento[0],
 					Name:   memento[1],
 				})
@@ -47,10 +47,10 @@ func FromDescription(title, description string) playlist.SearchItemGroup {
 		memento = append(memento, line)
 	}
 
-	return playlist.SearchItemGroup{
-		Artist: title,
-		Items:  items,
-		Type:   playlist.SearchItemTypeAlbum,
+	return playlist.ItemGroup{
+		Name:  title,
+		Items: items,
+		Type:  playlist.ItemGroupTypeAlbum,
 	}
 }
 

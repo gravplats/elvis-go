@@ -5,12 +5,12 @@ import (
 	"github.com/mrydengren/elvis/pkg/playlist"
 )
 
-func FromSetlist(setlist *setlistfm.Setlist) playlist.SearchItemGroup {
-	var items []playlist.SearchItem
+func fromSetlist(setlist *setlistfm.Setlist) playlist.ItemGroup {
+	var items []playlist.Item
 
 	for _, set := range setlist.Sets.Set {
 		for _, song := range set.Song {
-			item := playlist.SearchItem{
+			item := playlist.Item{
 				Name: song.Name,
 			}
 
@@ -24,9 +24,9 @@ func FromSetlist(setlist *setlistfm.Setlist) playlist.SearchItemGroup {
 		}
 	}
 
-	return playlist.SearchItemGroup{
-		Artist: setlist.Artist.Name,
-		Items:  items,
-		Type:   playlist.SearchItemTypeTrack,
+	return playlist.ItemGroup{
+		Name:  setlist.Artist.Name,
+		Items: items,
+		Type:  playlist.ItemGroupTypeTrack,
 	}
 }

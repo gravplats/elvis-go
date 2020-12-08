@@ -25,9 +25,9 @@ func Setlist(value string) error {
 
 	debug.DumpJson(setlist, "setlistfm-setlist.json")
 
-	searchItemGroup := FromSetlist(setlist)
+	itemGroup := fromSetlist(setlist)
 
 	spinner.Succeed()
 
-	return playlist.Create(searchItemGroup)
+	return playlist.Create(itemGroup)
 }

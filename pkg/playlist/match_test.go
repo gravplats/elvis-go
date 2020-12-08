@@ -6,7 +6,7 @@ import (
 )
 
 func TestGetBestMatch(t *testing.T) {
-	item := SearchItem{
+	item := Item{
 		Artist: "Opeth",
 		Name:   "Heir Apparent",
 	}
@@ -31,14 +31,14 @@ func TestGetBestMatch(t *testing.T) {
 }
 
 func TestMatch(t *testing.T) {
-	group := SearchItemGroup{
-		Artist: "Opeth",
-		Items: []SearchItem{
-			SearchItem{
+	group := ItemGroup{
+		Name: "Opeth",
+		Items: []Item{
+			Item{
 				Artist: "Opeth",
 				Name:   "Heir Apparent",
 			},
-			SearchItem{
+			Item{
 				Artist: "Opeth",
 				Name:   "Ghost of Perdition",
 			},
@@ -60,13 +60,13 @@ func TestMatch(t *testing.T) {
 		},
 	}
 
-	want := []SearchMatch{
-		SearchMatch{
+	want := []Match{
+		Match{
 			Artist: "Opeth",
 			ID:     "1",
 			Name:   "Heir Apparent",
 		},
-		SearchMatch{
+		Match{
 			Artist: "Opeth",
 			ID:     "2",
 			Name:   "Ghost of Perdition",

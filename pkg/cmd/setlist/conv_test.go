@@ -34,22 +34,22 @@ func TestFromSetlistWithMultipleSongs(t *testing.T) {
 		Sets:   sets,
 	}
 
-	want := playlist.SearchItemGroup{
-		Artist: "Opeth",
-		Items: []playlist.SearchItem{
-			playlist.SearchItem{
+	want := playlist.ItemGroup{
+		Name: "Opeth",
+		Items: []playlist.Item{
+			playlist.Item{
 				Artist: "Opeth",
 				Name:   "Heir Apparent",
 			},
-			playlist.SearchItem{
+			playlist.Item{
 				Artist: "Opeth",
 				Name:   "Ghost of Perdition",
 			},
 		},
-		Type: playlist.SearchItemTypeTrack,
+		Type: playlist.ItemGroupTypeTrack,
 	}
 
-	got := FromSetlist(&setlist)
+	got := fromSetlist(&setlist)
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("got: %+v, want: %+v", got, want)
@@ -86,22 +86,22 @@ func TestFromSetlistWithCover(t *testing.T) {
 		Sets:   sets,
 	}
 
-	want := playlist.SearchItemGroup{
-		Artist: "Opeth",
-		Items: []playlist.SearchItem{
-			playlist.SearchItem{
+	want := playlist.ItemGroup{
+		Name: "Opeth",
+		Items: []playlist.Item{
+			playlist.Item{
 				Artist: "Opeth",
 				Name:   "Heir Apparent",
 			},
-			playlist.SearchItem{
+			playlist.Item{
 				Artist: "Napalm Death",
 				Name:   "You Suffer",
 			},
 		},
-		Type: playlist.SearchItemTypeTrack,
+		Type: playlist.ItemGroupTypeTrack,
 	}
 
-	got := FromSetlist(&setlist)
+	got := fromSetlist(&setlist)
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("got: %+v, want: %+v", got, want)
@@ -139,22 +139,22 @@ func TestFromSetlistWithMultipleSets(t *testing.T) {
 		Sets:   sets,
 	}
 
-	want := playlist.SearchItemGroup{
-		Artist: "Opeth",
-		Items: []playlist.SearchItem{
-			playlist.SearchItem{
+	want := playlist.ItemGroup{
+		Name: "Opeth",
+		Items: []playlist.Item{
+			playlist.Item{
 				Artist: "Opeth",
 				Name:   "Heir Apparent",
 			},
-			playlist.SearchItem{
+			playlist.Item{
 				Artist: "Opeth",
 				Name:   "Deliverance",
 			},
 		},
-		Type: playlist.SearchItemTypeTrack,
+		Type: playlist.ItemGroupTypeTrack,
 	}
 
-	got := FromSetlist(&setlist)
+	got := fromSetlist(&setlist)
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("got: %+v, want: %+v", got, want)

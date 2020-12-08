@@ -23,9 +23,9 @@ func Top(artist string, limit int) error {
 
 	debug.DumpJson(toptracks, "lastfm-toptracks.json")
 
-	searchItemGroup := FromTopTracks(toptracks)
+	itemGroup := fromTopTracks(toptracks)
 
 	spinner.Succeed()
 
-	return playlist.Create(searchItemGroup)
+	return playlist.Create(itemGroup)
 }

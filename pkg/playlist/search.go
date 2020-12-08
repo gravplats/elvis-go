@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func search(client *spotify.Client, group SearchItemGroup) [][]Resource {
+func search(client *spotify.Client, group ItemGroup) [][]Resource {
 	type Result struct {
 		Index int
 		Value *spotify.SearchResult
@@ -17,7 +17,7 @@ func search(client *spotify.Client, group SearchItemGroup) [][]Resource {
 	ch := make(chan Result)
 
 	for i, v := range group.Items {
-		go func(index int, item SearchItem) {
+		go func(index int, item Item) {
 			query := fmt.Sprintf("artist:%s %s:%s",
 				strings.ToLower(item.Artist),
 				group.Type.FilterField,
@@ -33,7 +33,7 @@ func search(client *spotify.Client, group SearchItemGroup) [][]Resource {
 				Limit:   &limit,
 			}
 
-			value, err := client.SearchOpt(query, group.Type.Search, &options)
+			value, err := client.SearchOpt(query, group.Type.SearchType, &options)
 			if err != nil {
 				ch <- Result{
 					Index: index,

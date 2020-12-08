@@ -54,20 +54,20 @@ func TestFromDescription(t *testing.T) {
 		},
 	}
 
-	want := playlist.SearchItemGroup{
-		Artist: "Opeth",
-		Items: []playlist.SearchItem{
-			playlist.SearchItem{
+	want := playlist.ItemGroup{
+		Name: "Opeth",
+		Items: []playlist.Item{
+			playlist.Item{
 				Artist: "Opeth",
 				Name:   "Still Life",
 			},
 		},
-		Type: playlist.SearchItemTypeAlbum,
+		Type: playlist.ItemGroupTypeAlbum,
 	}
 
 	for _, fixture := range fixtures {
 		t.Run(fixture.name, func(t *testing.T) {
-			got := FromDescription("Opeth", fixture.input)
+			got := fromDescription("Opeth", fixture.input)
 
 			if !reflect.DeepEqual(got, want) {
 				t.Errorf("got: %+v, want: %+v", got, want)
@@ -86,22 +86,22 @@ func TestFromDescriptionMultipleAlbums(t *testing.T) {
 		"Blackwater Park\n" +
 		"https://opeth.com/albums/blackwater-park"
 
-	want := playlist.SearchItemGroup{
-		Artist: "Opeth",
-		Items: []playlist.SearchItem{
-			playlist.SearchItem{
+	want := playlist.ItemGroup{
+		Name: "Opeth",
+		Items: []playlist.Item{
+			playlist.Item{
 				Artist: "Opeth",
 				Name:   "Still Life",
 			},
-			playlist.SearchItem{
+			playlist.Item{
 				Artist: "Opeth",
 				Name:   "Blackwater Park",
 			},
 		},
-		Type: playlist.SearchItemTypeAlbum,
+		Type: playlist.ItemGroupTypeAlbum,
 	}
 
-	got := FromDescription("Opeth", description)
+	got := fromDescription("Opeth", description)
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("got: %+v, want: %+v", got, want)

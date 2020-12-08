@@ -5,42 +5,14 @@ import (
 	"github.com/zmb3/spotify"
 )
 
-type SearchType struct {
-	FilterField string
-	Search      spotify.SearchType
-}
-
-var (
-	SearchItemTypeAlbum = SearchType{
-		FilterField: "album",
-		Search:      spotify.SearchTypeAlbum,
-	}
-	SearchItemTypeTrack = SearchType{
-		FilterField: "track",
-		Search:      spotify.SearchTypeTrack,
-	}
-)
-
-type SearchItem struct {
-	Artist string
-	Name   string
-}
-
-// TODO: add New? for this new in order to set default `Type`.
-type SearchItemGroup struct {
-	Artist string
-	Items  []SearchItem
-	Type   SearchType
-}
-
-type SearchMatch struct {
+type Match struct {
 	Artist string
 	// Will be an empty string if no match was found
 	ID   spotify.ID
 	Name string
 }
 
-func getBestMatch(item SearchItem, resources []Resource) Resource {
+func getBestMatch(item Item, resources []Resource) Resource {
 	const Threshold = 0.4
 
 	bestSim := float64(0)
@@ -66,11 +38,11 @@ func getBestMatch(item SearchItem, resources []Resource) Resource {
 	return bestMatch
 }
 
-func match(group SearchItemGroup, resources [][]Resource) []SearchMatch {
-	var matches []SearchMatch
+func match(group ItemGroup, resources [][]Resource) []Match {
+	var matches []Match
 	for i, item := range group.Items {
 		bestMatch := getBestMatch(item, resources[i])
-		matches = append(matches, SearchMatch{
+		matches = append(matches, Match{
 			Artist: item.Artist,
 			ID:     bestMatch.ID,
 			Name:   item.Name,

@@ -9,7 +9,35 @@ import (
 	"github.com/zmb3/spotify"
 )
 
-func Create(searchItemGroup SearchItemGroup) error {
+// TODO: add New? for this new in order to set default `Type`.
+type ItemGroup struct {
+	Name  string
+	Items []Item
+	Type  Type
+}
+
+type Item struct {
+	Artist string
+	Name   string
+}
+
+type Type struct {
+	FilterField string
+	SearchType  spotify.SearchType
+}
+
+var (
+	ItemGroupTypeAlbum = Type{
+		FilterField: "album",
+		SearchType:  spotify.SearchTypeAlbum,
+	}
+	ItemGroupTypeTrack = Type{
+		FilterField: "track",
+		SearchType:  spotify.SearchTypeTrack,
+	}
+)
+
+func Create(itemGroup ItemGroup) error {
 	spinner.Start("Fetching API access token from Spotify Accounts service.")
 
 	// White-listed addresses to redirect to after authentication success OR failure
@@ -37,15 +65,15 @@ func Create(searchItemGroup SearchItemGroup) error {
 
 	spinner.Succeed()
 
-	var matches []SearchMatch
+	var matches []Match
 	var trackIds []spotify.ID
 
 	spinner.Start("Fetching Spotify tracks.")
 
-	switch searchItemGroup.Type.FilterField {
+	switch itemGroup.Type.FilterField {
 	case "album":
-		resources := search(&client, searchItemGroup)
-		matches = match(searchItemGroup, resources)
+		resources := search(&client, itemGroup)
+		matches = match(itemGroup, resources)
 
 		var albumIds []spotify.ID
 		for _, match := range matches {
@@ -64,8 +92,8 @@ func Create(searchItemGroup SearchItemGroup) error {
 			}
 		}
 	case "track":
-		resources := search(&client, searchItemGroup)
-		matches = match(searchItemGroup, resources)
+		resources := search(&client, itemGroup)
+		matches = match(itemGroup, resources)
 
 		for _, match := range matches {
 			if match.ID == "" {
@@ -79,9 +107,9 @@ func Create(searchItemGroup SearchItemGroup) error {
 	// TODO: how to handle Fail()?
 	spinner.Succeed()
 
-	spinner.Start(fmt.Sprintf("Creating Spotify playlist for %s.", searchItemGroup.Artist))
+	spinner.Start(fmt.Sprintf("Creating Spotify playlist for %s.", itemGroup.Name))
 
-	playlist, err := client.CreatePlaylistForUser(user.ID, searchItemGroup.Artist, "", false)
+	playlist, err := client.CreatePlaylistForUser(user.ID, itemGroup.Name, "", false)
 	if err != nil {
 		spinner.Fail()
 		return err

@@ -5,11 +5,11 @@ import (
 	"github.com/mrydengren/elvis/pkg/playlist"
 )
 
-func FromTopTracks(toptracks *lastfm.TopTracksWrapper) playlist.SearchItemGroup {
-	var items []playlist.SearchItem
+func fromTopTracks(toptracks *lastfm.TopTracksWrapper) playlist.ItemGroup {
+	var items []playlist.Item
 
 	for _, tt := range toptracks.Toptracks.Track {
-		item := playlist.SearchItem{
+		item := playlist.Item{
 			Artist: tt.Artist.Name,
 			Name:   tt.Name,
 		}
@@ -17,9 +17,9 @@ func FromTopTracks(toptracks *lastfm.TopTracksWrapper) playlist.SearchItemGroup 
 		items = append(items, item)
 	}
 
-	return playlist.SearchItemGroup{
-		Artist: toptracks.Toptracks.Attr.Artist,
-		Items:  items,
-		Type:   playlist.SearchItemTypeTrack,
+	return playlist.ItemGroup{
+		Name:  toptracks.Toptracks.Attr.Artist,
+		Items: items,
+		Type:  playlist.ItemGroupTypeTrack,
 	}
 }
