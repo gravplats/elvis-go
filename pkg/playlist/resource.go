@@ -7,7 +7,11 @@ type Resource struct {
 	Name string
 }
 
-func FromAlbum(result *spotify.SearchResult) []Resource {
+func fromAlbum(result *spotify.SearchResult) []Resource {
+	if result == nil {
+		return []Resource{}
+	}
+
 	var resources = make([]Resource, 0, len(result.Albums.Albums))
 	for _, item := range result.Albums.Albums {
 		resources = append(resources, Resource{
@@ -18,7 +22,11 @@ func FromAlbum(result *spotify.SearchResult) []Resource {
 	return resources
 }
 
-func FromTrack(result *spotify.SearchResult) []Resource {
+func fromTrack(result *spotify.SearchResult) []Resource {
+	if result == nil {
+		return []Resource{}
+	}
+
 	var resources = make([]Resource, 0, len(result.Tracks.Tracks))
 	for _, item := range result.Tracks.Tracks {
 		resources = append(resources, Resource{

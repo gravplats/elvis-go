@@ -24,8 +24,7 @@ func search(client *spotify.Client, group ItemGroup) [][]Resource {
 				strings.ToLower(item.Name),
 			)
 
-			// TODO: these values should probably be configurable.
-			country := "SE"
+			country := "from_token"
 			limit := 3
 
 			options := spotify.Options{
@@ -73,9 +72,9 @@ func search(client *spotify.Client, group ItemGroup) [][]Resource {
 	for _, result := range results {
 		switch group.Type.FilterField {
 		case "album":
-			resources = append(resources, FromAlbum(result.Value))
+			resources = append(resources, fromAlbum(result.Value))
 		case "track":
-			resources = append(resources, FromTrack(result.Value))
+			resources = append(resources, fromTrack(result.Value))
 		}
 
 		searchResults = append(searchResults, result.Value)

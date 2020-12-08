@@ -45,7 +45,13 @@ func Create(itemGroup ItemGroup) error {
 	var redirectURLPort = ":5555"
 	var redirectURL = "http://localhost" + redirectURLPort + "/callback"
 
-	auth := spotify.NewAuthenticator(redirectURL, spotify.ScopePlaylistModifyPrivate)
+	auth := spotify.NewAuthenticator(redirectURL,
+		spotify.ScopePlaylistModifyPrivate,
+		// For the "from_token" option in market.
+		// https://developer.spotify.com/documentation/web-api/reference/search/search/
+		spotify.ScopeUserReadPrivate,
+	)
+
 	token := oauth.GetToken(redirectURLPort, &auth)
 
 	client := auth.NewClient(token)
