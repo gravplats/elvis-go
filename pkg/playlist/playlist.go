@@ -3,7 +3,6 @@ package playlist
 import (
 	"fmt"
 	"github.com/mrydengren/elvis/pkg/debug"
-	"github.com/mrydengren/elvis/pkg/playlist/oauth"
 	"github.com/mrydengren/elvis/pkg/spinner"
 	"github.com/pkg/browser"
 	"github.com/zmb3/spotify"
@@ -40,23 +39,12 @@ var (
 func Create(itemGroup ItemGroup) error {
 	spinner.Start("Fetching API access token from Spotify Accounts service.")
 
-	// White-listed addresses to redirect to after authentication success OR failure
-	// See: https://developer.spotify.com/dashboard/
-	var redirectURLPort = ":5555"
-	var redirectURL = "http://localhost" + redirectURLPort + "/callback"
+	client, err := getClient()
+	if err != nil {
+		spinner.Fail()
+		return err
+	}
 
-	auth := spotify.NewAuthenticator(redirectURL,
-		spotify.ScopePlaylistModifyPrivate,
-		// For the "from_token" option in market.
-		// https://developer.spotify.com/documentation/web-api/reference/search/search/
-		spotify.ScopeUserReadPrivate,
-	)
-
-	token := oauth.GetToken(redirectURLPort, &auth)
-
-	client := auth.NewClient(token)
-
-	// TODO: how to handle Fail()?
 	spinner.Succeed()
 
 	spinner.Start("Fetching Spotify user information.")
@@ -78,7 +66,7 @@ func Create(itemGroup ItemGroup) error {
 
 	switch itemGroup.Type.FilterField {
 	case "album":
-		resources := search(&client, itemGroup)
+		resources := search(client, itemGroup)
 		matches = match(itemGroup, resources)
 
 		var albumIds []spotify.ID
@@ -90,7 +78,7 @@ func Create(itemGroup ItemGroup) error {
 			albumIds = append(albumIds, match.ID)
 		}
 
-		pages := getAlbumTracks(&client, albumIds)
+		pages := getAlbumTracks(client, albumIds)
 
 		for _, page := range pages {
 			for _, track := range page.Tracks {
@@ -98,7 +86,7 @@ func Create(itemGroup ItemGroup) error {
 			}
 		}
 	case "track":
-		resources := search(&client, itemGroup)
+		resources := search(client, itemGroup)
 		matches = match(itemGroup, resources)
 
 		for _, match := range matches {
