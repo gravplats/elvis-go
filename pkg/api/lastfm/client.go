@@ -1,8 +1,10 @@
 package lastfm
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
@@ -53,6 +55,36 @@ func (c *Client) SetAuthInfo(apiKey string, apiSecret string) {
 	c.apiSecret = apiSecret
 }
 
+type Error struct {
+	Message string `json:"message"`
+	Status  int    `json:"error"`
+}
+
+func (e Error) Error() string {
+	return e.Message
+}
+
+func (c *Client) decodeError(resp *http.Response) error {
+	responseBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	if len(responseBody) == 0 {
+		return fmt.Errorf("lastfm: HTTP %d: %s (body empty)", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
+
+	buf := bytes.NewBuffer(responseBody)
+
+	var e Error
+	err = json.NewDecoder(buf).Decode(&e)
+	if err != nil {
+		return fmt.Errorf("lastfm: couldn't decode error: (%d) [%s]", len(responseBody), responseBody)
+	}
+
+	return fmt.Errorf("lastfm: %s", e)
+}
+
 func (c *Client) get(method string, values url.Values, result interface{}) error {
 	values.Add("api_key", c.apiKey)
 	values.Add("format", c.accept)
@@ -72,8 +104,7 @@ func (c *Client) get(method string, values url.Values, result interface{}) error
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		// TODO: decode error in response.
-		return fmt.Errorf("HTTP NOT OK")
+		return c.decodeError(resp)
 	}
 
 	err = json.NewDecoder(resp.Body).Decode(result)
