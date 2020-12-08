@@ -1,21 +1,29 @@
 package config
 
 type LastfmApiKeys struct {
-	Key    string `json:"key"`
-	Secret string `json:"secret"`
+	Credentials struct {
+		Key    string `json:"key"`
+		Secret string `json:"secret"`
+	} `json:"credentials"`
 }
 
 type SetlistfmApiKeys struct {
-	Key string `json:"key"`
+	Credentials struct {
+		Key string `json:"key"`
+	} `json:"credentials"`
 }
 
 type SpotifyApiKeys struct {
-	Id     string `json:"id"`
-	Secret string `json:"secret"`
+	Credentials struct {
+		Id     string `json:"id"`
+		Secret string `json:"secret"`
+	} `json:"credentials"`
 }
 
 type YouTubeApiKeys struct {
-	Key string `json:"key""`
+	Credentials struct {
+		Key string `json:"key""`
+	} `json:"credentials"`
 }
 
 type Config struct {
