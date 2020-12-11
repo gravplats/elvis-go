@@ -98,7 +98,6 @@ func Create(itemGroup ItemGroup) error {
 		}
 	}
 
-	// TODO: how to handle Fail()?
 	spinner.Succeed()
 
 	spinner.Start(fmt.Sprintf("Creating Spotify playlist for %s.", itemGroup.Name))

@@ -3,9 +3,11 @@ package playlist
 import (
 	"fmt"
 	"github.com/mrydengren/elvis/pkg/debug"
+	"github.com/mrydengren/elvis/pkg/limit"
 	"github.com/zmb3/spotify"
 	"sort"
 	"strings"
+	"sync"
 )
 
 func search(client *spotify.Client, group ItemGroup) [][]Resource {
@@ -14,10 +16,24 @@ func search(client *spotify.Client, group ItemGroup) [][]Resource {
 		Value *spotify.SearchResult
 	}
 
-	ch := make(chan Result)
+	ch := make(chan Result, len(group.Items))
+
+	// Let's avoid hammering the Spotify Web API with possibly thousands of simultaneous requests by limiting the
+	// number of concurrent requests and the number of requests per seconds. Numbers are chosen arbitrarily.
+	cl := limit.NewConcurrency(16)
+	rl := limit.NewRate(16)
+
+	wg := sync.WaitGroup{}
+	wg.Add(len(group.Items))
 
 	for i, v := range group.Items {
 		go func(index int, item Item) {
+			defer cl.Release()
+			defer wg.Done()
+
+			cl.Take()
+			rl.Take()
+
 			query := fmt.Sprintf("artist:%s %s:%s",
 				strings.ToLower(item.Artist),
 				group.Type.FilterField,
@@ -49,17 +65,14 @@ func search(client *spotify.Client, group ItemGroup) [][]Resource {
 		}(i, v)
 	}
 
+	wg.Wait()
+	rl.Stop()
+
+	close(ch)
+
 	var results []Result
-
-	// TODO: improve error handling, avoid sending too many concurrent requests, timeouts etc.
-
-	for {
-		result := <-ch
+	for result := range ch {
 		results = append(results, result)
-
-		if len(results) == len(group.Items) {
-			break
-		}
 	}
 
 	sort.Slice(results, func(i int, j int) bool {
