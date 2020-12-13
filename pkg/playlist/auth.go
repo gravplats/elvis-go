@@ -117,7 +117,7 @@ func getTokenFromWeb(addr string, auth *spotify.Authenticator) (*oauth2.Token, e
 	handler := http.NewServeMux()
 	server := http.Server{Addr: addr, Handler: handler}
 
-	go func(s http.Server, h *http.ServeMux) {
+	go func(s *http.Server, h *http.ServeMux) {
 		h.HandleFunc("/callback", func(w http.ResponseWriter, r *http.Request) {
 			token, err := auth.Token(state, r)
 			if err != nil {
@@ -145,7 +145,7 @@ func getTokenFromWeb(addr string, auth *spotify.Authenticator) (*oauth2.Token, e
 				Token: nil,
 			}
 		}
-	}(server, handler)
+	}(&server, handler)
 
 	url := auth.AuthURL(state)
 	browser.OpenURL(url)
