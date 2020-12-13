@@ -22,7 +22,7 @@ type SpotifyApiKeys struct {
 
 type YouTubeApiKeys struct {
 	Credentials struct {
-		Key string `json:"key""`
+		Key string `json:"key"`
 	} `json:"credentials"`
 }
 
